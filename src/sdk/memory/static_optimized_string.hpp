@@ -29,7 +29,6 @@ namespace Bedrock {
 
         StaticOptimizedString(StaticOptimizedString &&) noexcept;
 
-
         ~StaticOptimizedString();
 
 

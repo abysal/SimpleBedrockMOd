@@ -21,7 +21,8 @@ namespace Bedrock {
     }
 
     StaticOptimizedString::StaticOptimizedString(StaticOptimizedString &&other) noexcept : string_data(nullptr) {
-        this->string_data = std::exchange(other.string_data, nullptr);
+        this->string_data = other.string_data;
+        other.string_data = StringPackedPointer(nullptr);
     }
 
     StaticOptimizedString &StaticOptimizedString::operator=(const StaticOptimizedString &other) {
@@ -77,19 +78,19 @@ namespace Bedrock {
         *static_cast<size_t *>(allocation) = value.length();
 
         // Skip over our size
-        char *alloc = static_cast<char *>(allocation) + sizeof(size_t);
+        char *string_allocation = static_cast<char *>(allocation) + sizeof(size_t);
 
-        memcpy(alloc, value.data(), value.length());
-        alloc[value.length()] = 0; // Nulls the end
+        memcpy(string_allocation, value.data(), value.length());
+        string_allocation[value.length()] = 0; // Nulls the end
 
-        auto allocation_raw = std::bit_cast<uintptr_t>(alloc);
+        auto allocation_raw = std::bit_cast<uintptr_t>(allocation);
         // Sets a flag to annotate that this string is dynamic
         allocation_raw |= this->DynamicMask;
 
-        this->string_data = this->Mask & allocation_raw;
+        this->string_data = allocation_raw;
 
         // Sanity check
-        if (this->string_data.p() != alloc) {
+        if (this->string_data.p() != allocation) {
             throw std::runtime_error("Allocation has a broken pointer");
         }
     }
@@ -99,7 +100,7 @@ namespace Bedrock {
             throw std::logic_error("Unimplemented!");
         }
 
-        if (value.length() > 0x7F | location == StorageLocation::Dynamic) {
+        if (value.length() > 0x7F || location == StorageLocation::Dynamic) {
             allocate_long_string(value);
             return;
         }
@@ -134,7 +135,7 @@ namespace Bedrock {
     }
 
     bool StaticOptimizedString::is_dynamic() const {
-        return this->string_data.flags() & 0x80 == 1;
+        return (this->string_data.flags() & 0x80) == 0x80;
     }
 
     size_t StaticOptimizedString::length() const {

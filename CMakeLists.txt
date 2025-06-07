@@ -26,7 +26,8 @@ add_library(bedrock_test_mod SHARED src/dllmain.cpp
         src/sdk/memory/packed_pointer.cpp
         src/sdk/memory/packed_pointer.hpp
         src/sdk/memory/static_optimized_string.cpp
-        src/sdk/memory/static_optimized_string.hpp)
+        src/sdk/memory/static_optimized_string.hpp
+        src/sdk/minecraft_render_ui_context.hpp)
 
 
 include(FetchContent)

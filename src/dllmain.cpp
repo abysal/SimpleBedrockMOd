@@ -19,55 +19,32 @@
 #include "sdk/molang/expression_node.hpp"
 #include <random>
 
+#include "sdk/memory/static_optimized_string.hpp"
+
 std::thread our_thread;
 HMODULE our_module;
 
-SafetyHookInline expr_node_parse{};
+void test() {
+    auto string = Bedrock::StaticOptimizedString("Hello world",
+                                                 Bedrock::StaticOptimizedString::StorageLocation::Static);
 
-bool expression_node_parse(ExpressionNode* self, std::string_view expression, const MolangParseConfig& config) {
-    const auto value = expr_node_parse.call<bool>(self, expression, config);
-    // self->instructions.clear();
-    return value;
+    std::println("{}, is dynamic: {}", string.get(), string.is_dynamic());
+
+    string = Bedrock::StaticOptimizedString(
+        "Some Really Really Really Really Really Really Really Really Really Really Really Really Really Really Really Really Really Long String",
+        Bedrock::StaticOptimizedString::StorageLocation::Static);
+    std::println("{}, is dynamic: {}", string.get(), string.is_dynamic());
 }
-
-SafetyHookInline tess_begin_hook;
-
-void tess_begin(void* self, void* a2, void* a3) { 
-    tess_begin_hook.call<void>(self, a2, a3);
-    std::println("Tess pointer: {:x}", std::bit_cast<uintptr_t>(self));
-}
-
-SafetyHookInline minecraft_ui_render_context;
-
-struct ScreenContext {
-    char  pad_0000[200]; // 0x0000
-    void* Tessellator;   // 0x00C8
-};
-
-struct MinecraftRenderUiContext {
-    virtual ~MinecraftRenderUiContext() = 0;
-    void* ci; // IClientInstance
-    ScreenContext* screen_context;
-    std::array<std::byte, 320 - 24> padding;
-};
-
-
-void* minecraft_ui_render_context_ctor(void* self, void* client_instance, ScreenContext* screen_context, void* unk) {
-    std::println("Screen Context: {:x}", std::bit_cast<uintptr_t>(screen_context));
-    std::println("McUiRenderContext ptr: {:x}", std::bit_cast<uintptr_t>(self));
-    return minecraft_ui_render_context.call<void*>(self, client_instance, screen_context, unk);
-}
-
 
 void entry() {
     AllocConsole();
     AttachConsole(GetCurrentProcessId());
     SetConsoleTitleA("Bedrock Test Mod");
-    FILE* in;
+    FILE *in;
     freopen_s(&in, "CONIN$", "r", stdin);
-    FILE* out;
+    FILE *out;
     freopen_s(&out, "CONOUT$", "w", stdout);
-    FILE* err;
+    FILE *err;
     freopen_s(&err, "CONOUT$", "w", stderr);
 
     if (const auto status = kiero::init(kiero::RenderType::D3D12);
@@ -76,12 +53,8 @@ void entry() {
         return;
     }
 
-    tess_begin_hook = sbm::HookManager::hook<sbm::TessellatorBegin>(&tess_begin);
-    minecraft_ui_render_context =
-        sbm::HookManager::hook<sbm::MinecraftUiRenderContextCtor>(&minecraft_ui_render_context_ctor);
-
     std::println("SBM loaded");
-
+    test();
     // Wait for key press
     while (!(GetKeyState(VK_LCONTROL) & 0x8000)) {
         Sleep(10); // avoid busy-waiting

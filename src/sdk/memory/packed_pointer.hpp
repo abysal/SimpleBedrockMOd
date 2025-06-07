@@ -18,16 +18,15 @@ namespace Bedrock {
         constexpr PackedPointer(nullptr_t) : pointer(0x0) {
         }
 
-        constexpr PackedPointer(PointerType *pointer) : pointer(std::bit_cast<uintptr_t>(pointer)) {
-        }
+        
+        constexpr PackedPointer() noexcept                                = default;
+        constexpr PackedPointer(const PackedPointer&) noexcept            = default;
+        constexpr PackedPointer(PackedPointer&&) noexcept                 = default;
+        constexpr PackedPointer& operator=(const PackedPointer&) noexcept = default;
+        constexpr PackedPointer& operator=(PackedPointer&&) noexcept      = default;
 
         constexpr PackedPointer(std::remove_const_t<PointerType> *pointer) : pointer(
             std::bit_cast<uintptr_t>(pointer)) {
-        }
-
-        constexpr PackedPointer &operator=(PointerType *ptr) noexcept {
-            pointer = std::bit_cast<uintptr_t>(ptr);
-            return *this;
         }
 
         constexpr PackedPointer &operator=(std::remove_const_t<PointerType> *ptr) noexcept {

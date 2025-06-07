@@ -143,7 +143,6 @@ class ExpressionNode {
 public:
     ExpressionOrConstant expression_or_constant;
 
-    ExpressionNode()
 };
 
 class MolangProgramBuildState {
