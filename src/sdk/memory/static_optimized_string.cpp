@@ -97,7 +97,8 @@ namespace Bedrock {
 
     void StaticOptimizedString::set(const std::string_view value, const StorageLocation location) {
         if (value.empty()) {
-            throw std::logic_error("Unimplemented!");
+            this->string_data = nullptr;
+            return; // Not accurate to the game
         }
 
         if (value.length() > 0x7F || location == StorageLocation::Dynamic) {

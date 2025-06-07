@@ -5,7 +5,7 @@
 #include "hook_manager.hpp"
 
 namespace sbm {
-    HookManager &HookManager::get_instance() {
+    HookManager& HookManager::get_instance() {
         static HookManager instance;
         return instance;
     }
@@ -14,6 +14,7 @@ namespace sbm {
         this->insert_signature<ThreadingGetMainThreadScheduler>();
         this->insert_signature<DetailsExpressionNodeParse>();
         this->insert_signature<ExpressionNodeExpressionNode>();
+        this->insert_signature<ExpressionNodeEvalGeneric>();
         this->insert_signature<OptionsGetFov>();
         this->insert_signature<TessellatorBegin>();
         this->insert_signature<MinecraftUiRenderContextCtor>();
@@ -23,4 +24,4 @@ namespace sbm {
         this->insert_signature_windows<InvokeKeyUpEventHandlers>();
         this->insert_signature_windows<InvokeDelegatesKeyDownHandler>();
     }
-} // sbm
+} // namespace sbm

@@ -56,6 +56,9 @@ namespace brstd {
             storage_type storage{};
         };
 
+
+        // Now that im thinking about it, this is most likely incorrect since this acts like std::bitset which this tries to be better than.
+        // So I need to refactor how this is managed, right now we actually make an invalid thing for anything over uint64_t
         template<size_t Bits>
         struct select_storage_type {
             static_assert(Bits > 0, "bitset must have at least 1 bit");

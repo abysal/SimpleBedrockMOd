@@ -32,7 +32,8 @@ static_assert(sizeof(ExpressionOpBitField) == 16);
 struct MolangParseConfig {
     MolangVersion version = MolangVersion::Latest;
     QuerySetIdentifierCollection allowed_query_sets;
-    ExpressionOpBitField allowed_operations{std::array{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF}}; // Set all bits cuz fuck it
+    ExpressionOpBitField allowed_operations{std::array{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF}};
+    // Set all bits cuz fuck it
     std::vector<std::string> allowed_specific_queries{};
 };
 

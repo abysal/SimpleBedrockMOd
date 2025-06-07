@@ -27,7 +27,18 @@ add_library(bedrock_test_mod SHARED src/dllmain.cpp
         src/sdk/memory/packed_pointer.hpp
         src/sdk/memory/static_optimized_string.cpp
         src/sdk/memory/static_optimized_string.hpp
-        src/sdk/minecraft_render_ui_context.hpp)
+        src/sdk/minecraft_render_ui_context.hpp
+        src/sdk/client/render_params.cpp
+        src/sdk/client/render_params.hpp
+        src/sdk/block/block_pos.hpp
+        src/sdk/client/particle_system.cpp
+        src/sdk/client/particle_system.hpp
+        src/sdk/molang/molang_script_arg_data.cpp
+        src/sdk/molang/molang_script_arg_data.hpp
+        src/sdk/client/material_ptr.cpp
+        src/sdk/client/material_ptr.hpp
+        src/sdk/molang/molang_variable_map.cpp
+        src/sdk/molang/molang_variable_map.hpp)
 
 
 include(FetchContent)
@@ -63,6 +74,17 @@ FetchContent_Declare(
         GIT_TAG "origin/main"
 )
 
+include(FetchContent)
+
+FetchContent_Declare(
+        glm
+        GIT_REPOSITORY https://github.com/g-truc/glm.git
+        GIT_TAG bf71a834948186f4097caa076cd2663c69a10e1e #refs/tags/1.0.1
+)
+
+FetchContent_MakeAvailable(glm)
+
+
 FetchContent_MakeAvailable(GSL)
 
 
@@ -70,3 +92,4 @@ target_link_libraries(bedrock_test_mod PRIVATE safetyhook)
 target_link_libraries(bedrock_test_mod PRIVATE kiero)
 target_link_libraries(bedrock_test_mod PRIVATE libhat)
 target_link_libraries(bedrock_test_mod PRIVATE GSL)
+target_link_libraries(bedrock_test_mod PRIVATE glm::glm)

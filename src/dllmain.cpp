@@ -54,7 +54,7 @@ void entry() {
     }
 
     std::println("SBM loaded");
-    test();
+    (void)sbm::HookManager::get_instance();
     // Wait for key press
     while (!(GetKeyState(VK_LCONTROL) & 0x8000)) {
         Sleep(10); // avoid busy-waiting
