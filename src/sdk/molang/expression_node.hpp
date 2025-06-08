@@ -42,10 +42,6 @@ namespace details {
         virtual auto getCodeAddress() const -> void (*)(::MolangEvalParams&, void*) = 0;
     };
 
-    class RenderParams {
-    public:
-    };
-
     class ExpressionNode {
     public:
         // Unknown
@@ -133,12 +129,17 @@ namespace details {
 using ExpressionOrConstant = std::variant<std::unique_ptr<details::IConstantExpression>, float>;
 static_assert(sizeof(ExpressionOrConstant) == 16);
 
+
+
 class ExpressionNode {
 public:
     ExpressionOrConstant expression_or_constant;
 
     ExpressionNode(const std::string& source, MolangVersion version);
-    MolangScriptArg* eval_generic(details::RenderParams& params);
+    MolangScriptArg* eval_generic(RenderParams& params);
+
+    details::IConstantExpression& constant_expression();
+
 };
 
 class MolangProgramBuildState {

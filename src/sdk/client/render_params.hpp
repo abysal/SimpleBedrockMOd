@@ -27,6 +27,10 @@ enum class AttachableSlotIndex : int {
     _Count
 };
 
+namespace Molang {
+    class MolangVariableMap;
+}
+
 class RenderParams {
 public:
     struct Flags {
@@ -34,10 +38,10 @@ public:
     };
 
     RenderParams() = default;
-    RenderParams(class MolangVariableMap* variable_map) : mVariables(variable_map) {}
+    RenderParams(Molang::MolangVariableMap* variable_map) : mVariables(variable_map) {}
 
     class BaseActorRenderContext*          mBaseActorRenderContext{nullptr};
-    class MolangVariableMap*               mVariables{nullptr};
+    Molang::MolangVariableMap*             mVariables{nullptr};
     class AnimationComponent*              mAnimationComponent{nullptr};
     class AnimationComponent*              mRootAnimationComponent{nullptr};
     std::array<std::byte, 16>              mModel{};

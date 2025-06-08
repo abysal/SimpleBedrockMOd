@@ -23,7 +23,36 @@ template <typename T> struct MolangHashStringVariable : protected HashedString {
     HashedString& get_name() { return *this; }
 };
 
-using MolangScriptArgType = int;
+enum class MolangScriptArgType : int {
+    Unset = -1,
+    Float,
+    HashType64,
+    MolangLoopBreak,
+    MolangActorPtr,
+    MolangActorIdPtr,
+    Variant
+};
+
+constexpr std::string_view script_to_string(MolangScriptArgType t) { 
+    switch (t) {
+        case MolangScriptArgType::Unset:
+            return "Unset";
+        case MolangScriptArgType::Float:
+            return "Float";
+        case MolangScriptArgType::HashType64:
+            return "HashType64";
+        case MolangScriptArgType::MolangLoopBreak:
+            return "MolangLoopBreak";
+        case MolangScriptArgType::MolangActorPtr:
+            return "MolangActorPtr";
+        case MolangScriptArgType::MolangActorIdPtr:
+            return "MolangActorIdPtr";
+        case MolangScriptArgType::Variant:
+            return "Variant";
+    };
+       
+    return "I HAVE NO IDEA WHAT THE FUCK HAPPENED";
+}
 
 struct MolangLoopBreak {};
 struct MolangLoopContinue {};
@@ -45,10 +74,12 @@ struct MolangScriptArg;
 
 struct MolangMemberVariable;
 
+class RenderParams;
+
 namespace details {
 
     using QueryFunctionAccessor = std::function<
-        MolangScriptArg&(class RenderParams&, const std::vector<class ExpressionNode>&)>;
+        MolangScriptArg&(RenderParams&, const std::vector<class ExpressionNode>&)>;
 
     enum class MolangQueryFunctionReturnType : unsigned long {
         Float = 1,
@@ -163,9 +194,9 @@ namespace details {
 }; // namespace details
 
 struct MolangScriptArg {
-    MolangScriptArgType          type;
-    MolangScriptArgPOD           pod;
-    details::MolangScriptArgData data;
+    MolangScriptArgType          type{};
+    MolangScriptArgPOD           pod{};
+    details::MolangScriptArgData data{};
 };
 
 struct MolangMemberVariable {

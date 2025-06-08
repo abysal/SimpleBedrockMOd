@@ -20,10 +20,16 @@ ExpressionNode::ExpressionNode(const std::string& source, MolangVersion version)
     ctor(this, source, version);
 }
 
-MolangScriptArg* ExpressionNode::eval_generic(details::RenderParams& params) {
-    static auto eval_generic =
-        reinterpret_cast<MolangScriptArg* (*)(ExpressionNode*, details::RenderParams&)>(
-            sbm::HookManager::pattern_address<sbm::ExpressionNodeEvalGeneric>()
-        );
-    return eval_generic(this, params);
+MolangScriptArg* ExpressionNode::eval_generic(RenderParams& params) {
+    if (std::holds_alternative<float>(this->expression_or_constant)) {
+        throw std::logic_error("not implemented");
+    }
+
+    auto& expression = std::get<0>(this->expression_or_constant);
+    return expression->evalGeneric(params);
+}
+
+details::IConstantExpression& ExpressionNode::constant_expression() {
+    auto& expression = std::get<0>(this->expression_or_constant);
+    return *expression;
 }

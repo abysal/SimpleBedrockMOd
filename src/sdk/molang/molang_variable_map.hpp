@@ -26,13 +26,14 @@ namespace Molang {
         HashedString                     mName;
         MolangScriptArg                  mValue;
         std::unique_ptr<MolangScriptArg> mPublicValue;
+        MolangVariableSettings           mSetting;
     };
 
     class MolangVariableMap {
     public:
         std::vector<short> mMapFromVariableToIndexToVariableArrayOffset{};
         std::vector<std::unique_ptr<MolangVariable>> mVariables{};
-        bool                                         mHasPublicVariables{};
+        bool                                         mHasPublicVariables{true};
     };
 
 } // namespace Molang
